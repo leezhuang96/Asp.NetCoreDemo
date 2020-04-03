@@ -1,0 +1,17 @@
+﻿@model AspCoreDemo.Models.Employee
+
+<tr>
+    <td>@Model.FristName</td>
+    <td>@Model.LastName</td>
+    <td>@Model.Gender</td>
+    <td>@Model.Fired</td>
+
+    <td>
+        @if (!Model.Fired)
+        { 
+            <a asp-action="Frie" asp-route-empolyeeId="@Model.Id">
+                Frie
+            </a>
+        }
+    </td>
+</tr>

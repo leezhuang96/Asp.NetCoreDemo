@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" asp-href-include="css/*" asp-href-exclude="css/all.main.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" asp-href-include="css/all.main.css" />
+    </environment>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <!-- taghelper: asp-append-version 防止图片被缓存 -->
+                <img asp-append-version="true" 
+                     alt="logo" 
+                     src="~/images/Home.png" 
+                     style="height: 60px; width: 100px;" />
+            </div>
+            <div class="col-md-10">
+                <span class="h2">@ViewBag.Title</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</body>
+</html>

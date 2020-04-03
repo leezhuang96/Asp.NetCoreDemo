@@ -1,0 +1,13 @@
+﻿@model AspCoreDemo.Models.CompanySummary
+
+    <div class="small">
+        <div class="row h6">@ViewBag.Title</div>
+        <div class="row">
+            <div class="col-md-10">Employee Count:</div>
+            <div class="col-md-2">@Model.EmployeeCount</div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">Average Count :</div>
+            <div class="col-md-2">@Model.AverageDepartmentEmployeeCount</div>
+        </div>
+    </div>

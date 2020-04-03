@@ -1,0 +1,22 @@
+﻿@using AspCoreDemo.Models
+@using Microsoft.Extensions.Options
+@model AspCoreDemo.Models.Department
+@inject IOptions<AspCoreDemoOptions> options
+
+    <tr>
+        @if (Model.EmployeeCount > options.Value.BoldDepartmentEmployeeCount)
+        {
+            <td><strong>@Model.Name</strong></td>
+        }
+        else 
+        {
+            <td>@Model.Name</td>
+        }
+        <td>@Model.Location</td>
+        <td>@Model.EmployeeCount</td>
+        <td>
+            <a asp-controller="Employee" asp-action="Index" asp-route-departmentId="@Model.Id">
+                Employees
+            </a>
+        </td>
+    </tr>
