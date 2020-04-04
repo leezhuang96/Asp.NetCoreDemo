@@ -979,8 +979,258 @@ public void ConfigureServices(IServiceCollection services)
   
       <div class="col-md-4">
           <a asp-page="Department/AddDepartment">Add</a>
-      </div>
+      </di>
   </div>
+  ```
+
+
+### 3. SignalR
+
+实时web应用技术：默认采用回落机制
+
+- webSocket
+- server sent enevts (SSE)
+- long polling
+
+SignalR采用RPC范式进行客户端与服务端的通信：RPC（Remote procedure call）可以像调用本地方法一样调用远程服务。
+
+Hub: SignalR的一个组件，运行再Asp .net core 应用里的一个服务端的类，进行服务端与客户端通信。Hub支持Json和MessagePack协议
+
+#### Create Project 
+
+- New > Project > Asp .Net core web application
+
+#### Startup.cs
+
+```c#
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddControllers();
+        services.AddSignalR();
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+        	app.UseDeveloperExceptionPage();
+        }
+
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+    }
+}
+```
+
+#### ASPNETCORE_ENVIRONMENT
+
+- \Properties\launchSettings.json
+
+  ```json
+  {
+    "profiles": {
+      "SignalRDemo": {
+        "commandName": "Project",
+        "launchBrowser": true,
+        "applicationUrl": "https://localhost:5001;http://localhost:5000",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    }
+  }
+  ```
+
+#### Services > ICountService.cs & CountService.cs
+
+```c#
+public interface ICountService
+{
+	public Task<int> GetCount();
+}
+
+public class CountService : ICountService
+{
+    private int _count;
+
+    public Task<int> GetCount()
+    {
+    	return Task.Run(() => _count++);
+    }
+}
+```
+
+#### CountHub.cs
+
+```c#
+//[Authorize]
+public class CountHub : Hub
+{
+    private readonly ICountService countService;
+
+    public CountHub(ICountService countService)
+    {
+        this.countService = countService;
+    }
+
+    public async Task GetLatestCount(string maxValue)
+    {
+        //var userName = Context.User.Identity.Name;
+
+        int count;
+        do
+        {
+            count = await countService.GetCount();
+            Thread.Sleep(1000);
+
+            //incoke all clients method.
+            await Clients.All.SendAsync("ReciveUpdate", count);
+        }
+        while (count < int.Parse(maxValue));
+
+        //incoke all clients method.
+        await Clients.All.SendAsync("Finsihed");
+    }
+
+    public async override Task OnConnectedAsync()
+    {
+        var connectionId = Context.ConnectionId;
+        var client = Clients.Client(connectionId);
+
+        //incoke client<connectionId> method.
+        await client.SendAsync("someFunc", new { random= "Init" });
+        //incoke except client<connectionId> method.
+        await Clients.AllExcept(connectionId).SendAsync("someFunc");
+
+        await Groups.AddToGroupAsync(connectionId, "MyGroup");
+        await Groups.RemoveFromGroupAsync(connectionId, "MyGroup");
+
+        await Clients.Group("MyGroup").SendAsync("someFunc");
+    }
+}
+```
+
+#### Controllers > CountController.cs
+
+```c#
+[Route("api/count")]
+public class CountController : Controller
+{
+    private readonly IHubContext<CountHub> countHub;
+
+    public CountController(IHubContext<CountHub> countHub)
+    {
+    	this.countHub = countHub;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Post(string random)
+    {
+        await countHub.Clients.All.SendAsync("someFunc", new { random = "Start" });
+
+        return Accepted(10);
+    }
+}
+```
+
+#### Using libman Install bootstrap
+
+- Add > Client-Side Library > @aspnet/signalr@1.1.4 > Install, libman.json
+
+  ```josn
+  {
+    "version": "1.0",
+    "defaultProvider": "unpkg",
+    "libraries": [
+      {
+        "library": "@aspnet/signalr@1.1.4",
+        "destination": "wwwroot/lib/@aspnet/signalr/",
+        "files": [
+          "dist/browser/signalr.js"
+        ]
+      }
+    ]
+  }
+  ```
+
+#### Client
+
+- wwwroot > index.html 客户端html
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8" />
+      <title></title>
+  </head>
+  <body>
+      <button id="submit">Submit</button>
+      <div id="result" style="color: green; font-weight: bold; font-size: 24px;"></div>
+  
+      <script src="/lib/@aspnet/signalr/dist/browser/signalr.js"></script>
+      <script src="index.js"></script>
+  </body>
+  </html>
+  ```
+
+- wwwroot > index.js 客户端js
+
+  ```javascript
+  let connection = null;
+  
+  setupConnection = () => {
+      //设置使用longPolling
+      //connection = new signalR.HubConnectionBuilder()
+      //    .withUrl("/counthub", signalR.HttpTransportType.LongPolling)
+      //    .build();
+  
+      connection = new signalR.HubConnectionBuilder()
+          .withUrl("/counthub")
+          .build();
+  
+      connection.on("ReciveUpdate", (update) => {
+          const resultDiv = document.getElementById("result");
+          resultDiv.innerHTML = update;
+      });
+  
+      connection.on("someFunc", function (obj) {
+          const resultDiv = document.getElementById("result");
+          resultDiv.innerHTML = "Someone called, parametes: " + obj.random;
+      });
+  
+      connection.on("Finsihed", function (obj) {
+          const resultDiv = document.getElementById("result");
+          resultDiv.innerHTML = "Finsihed";
+      });
+  
+      connection.start()
+          .catch(err => console.error(err.toString()));
+  }
+  
+  setupConnection();
+  
+  document.getElementById("submit").addEventListener("click", e => {
+      e.preventDefault();
+  
+      fetch("/api/count",
+          {
+              method: "POST",
+              headers: {
+                  'content-type': 'application/json'
+              }
+          })
+          .then(response => response.text())
+          .then(maxValue => connection.invoke("GetLatestCount", maxValue));
+  })
   ```
 
   

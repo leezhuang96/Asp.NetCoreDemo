@@ -1,0 +1,12 @@
+﻿{
+  "profiles": {
+    "SignalRDemo": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001/index.html;http://localhost:5000/index.html",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
