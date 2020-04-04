@@ -50,9 +50,9 @@ namespace AspCoreDemo.Controllers
         }
 
 
-        public async Task<IActionResult> Frie(int empolyeeId)
+        public async Task<IActionResult> Frie(int employeeId)
         {
-            var employee = await employeeService.Frie(empolyeeId);
+            var employee = await employeeService.Frie(employeeId);
             return RedirectToAction(nameof(Index), new { departmentId = employee.DepartmentId});
         }
     }

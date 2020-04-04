@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "l7vd/xSrKKQSxG16RAWJVTb+IEB2RWE2akIbiiuQajPImGAEFzSUD+8lcQpTKn8wAL9QIZfIygSxXuuvXfdrNw==",
+  "dgSpecHash": "80CPLO3LqX/HjSgihFjBClDkEhaAEf/voYjDmWT9pVCCHiSEaV2PAuaSw5zsnKogY0OJ3hywqSNkFNCmBbN9Cg==",
   "success": true,
-  "projectFilePath": "D:\\repos\\C#\\AspCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj",
+  "projectFilePath": "D:\\repos\\C#\\Asp.NetCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jordon Li\\.nuget\\packages\\buildbundlerminifier\\3.2.435\\buildbundlerminifier.3.2.435.nupkg.sha512"
   ],

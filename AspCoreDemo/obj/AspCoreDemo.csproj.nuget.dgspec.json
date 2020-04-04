@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\repos\\C#\\AspCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj": {}
+    "D:\\repos\\C#\\Asp.NetCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj": {}
   },
   "projects": {
-    "D:\\repos\\C#\\AspCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj": {
+    "D:\\repos\\C#\\Asp.NetCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\repos\\C#\\AspCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj",
+        "projectUniqueName": "D:\\repos\\C#\\Asp.NetCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj",
         "projectName": "AspCoreDemo",
-        "projectPath": "D:\\repos\\C#\\AspCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj",
+        "projectPath": "D:\\repos\\C#\\Asp.NetCoreDemo\\AspCoreDemo\\AspCoreDemo.csproj",
         "packagesPath": "C:\\Users\\Jordon Li\\.nuget\\packages\\",
-        "outputPath": "D:\\repos\\C#\\AspCoreDemo\\AspCoreDemo\\obj\\",
+        "outputPath": "D:\\repos\\C#\\Asp.NetCoreDemo\\AspCoreDemo\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

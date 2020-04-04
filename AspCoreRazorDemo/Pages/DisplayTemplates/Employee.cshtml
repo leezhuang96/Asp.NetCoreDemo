@@ -1,0 +1,20 @@
+﻿@model AspCoreRazorDemo.Models.Employee
+
+<tr>
+    <td>@Model.FristName</td>
+    <td>@Model.LastName</td>
+    <td>@Model.Gender</td>
+    <td>@Model.Fired</td>
+
+    <td>
+        @if (!Model.Fired)
+        {
+            <a asp-page="EmployeeList"
+               asp-page-handler="Fire"
+               asp-route-employeeId="@Model.Id"
+               asp-route-departmentId="@Model.DepartmentId">
+                Frie
+            </a>
+        }
+    </td>
+</tr>

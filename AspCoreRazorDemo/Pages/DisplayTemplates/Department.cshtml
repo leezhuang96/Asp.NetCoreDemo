@@ -1,0 +1,20 @@
+﻿@using AspCoreRazorDemo.Models
+@using Microsoft.Extensions.Options
+@model AspCoreRazorDemo.Models.Department
+@inject IOptions<AspCoreRazorDemoOptions> options
+
+    <tr>
+        @if (Model.EmployeeCount > options.Value.BoldDepartmentEmployeeCount)
+        {
+            <td><strong>@Model.Name</strong></td>
+        }
+        else
+        {
+            <td>@Model.Name</td>
+        }
+        <td>@Model.Location</td>
+        <td>@Model.EmployeeCount</td>
+        <td>
+            <a asp-page="Employee/EmployeeList" asp-route-departmentId="@Model.Id">Employees</a>
+        </td>
+    </tr>

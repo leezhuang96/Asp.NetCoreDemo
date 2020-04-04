@@ -12,13 +12,15 @@
 * Razor Pages: /SomePage
 * SignalR: /Hub/Chat
 
-### 1. 创建项目
+### 1. MVC
 
-New > Project > Asp .Net core web application
+#### Create Project 
+
+- New > Project > Asp .Net core web application
 
 #### Program class
 
-```c#
+```C#
 public class Program
 {
     public static void Main(string[] args)
@@ -100,26 +102,28 @@ public class Startup
 
 #### ASPNETCORE_ENVIRONMENT
 
-\Properties\launchSettings.json
+- \Properties\launchSettings.json
 
-```json
-{
-  "profiles": {
-    "AspCoreDemo": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+  ```json
+  {
+    "profiles": {
+      "AspCoreDemo": {
+        "commandName": "Project",
+        "launchBrowser": true,
+        "applicationUrl": "https://localhost:5001;http://localhost:5000",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
       }
     }
   }
-}
-```
+  ```
 
-#### a. Using npm package.json file install bootstrap *
+#### bootstrap 
 
-Add > New Item > npm Configuration file : package.json
+##### a. Using npm package.json file install bootstrap *
+
+- Add > New Item > npm Configuration file : package.json
 
 ```json
 {
@@ -132,9 +136,9 @@ Add > New Item > npm Configuration file : package.json
 }
 ```
 
-#### b. Using libman Install bootstrap
+##### b. Using libman Install bootstrap
 
-Add > Client-Side Library > bootstrap@4.4.1 > Install, libman.json
+- Add > Client-Side Library > bootstrap@4.4.1 > Install, libman.json
 
 ```json
 {
@@ -152,9 +156,9 @@ Add > Client-Side Library > bootstrap@4.4.1 > Install, libman.json
 }
 ```
 
-#### Merge and Minify css files
+#### Using BuildBundlerMinifier merge and minify css files
 
-Add > New Item, bundleconfig.json
+- Add > New Item, bundleconfig.json
 
 ```json
 [
@@ -175,9 +179,9 @@ Add > New Item, bundleconfig.json
 ]
 ```
 
-Manage NuGet packges > BuildBundlerMinifier
+- Manage NuGet packges > BuildBundlerMinifier
 
-### 2. 使用MVC相关技术
+#### 使用MVC相关技术
 
 * Controller
 * Tag Helper
@@ -196,8 +200,6 @@ public class Department
     public int EmployeeCount { get; set; }
 }
 ```
-
-
 
 #### Services
 
@@ -251,7 +253,7 @@ public class DepartmentService : IDepartmentService
 
 #### Register Services 
 
-Startup.cs
+- Startup.cs
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
@@ -261,8 +263,6 @@ public void ConfigureServices(IServiceCollection services)
     services.AddSingleton<IDepartmentService, DepartmentService>();
 }
 ```
-
-
 
 #### Controllers
 
@@ -304,7 +304,13 @@ public class DepartmentController : Controller
 
 #### Views
 
-##### Views > Shared 公共页面 : Add > New Item > Razor Layout,  _Layout.cshtml
+- Views > _ViewImports.cshtml 全局启用TagHelper: Add > New Item > Razor View Imports
+
+  ```html
+  @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+  ```
+
+- Views > Shared > _Layout.cshtml 公共页面 : Add > New Item > Razor Layout
 
 ```html
 <!DOCTYPE html>
@@ -343,7 +349,7 @@ public class DepartmentController : Controller
 
 ```
 
-##### Views start 页面： Add > New Item > Razor View Start, _ViewStart.cshtml
+- Views >  _ViewStart.cshtml start 页面： Add > New Item > Razor View Start
 
 ```html
 @{
@@ -351,13 +357,7 @@ public class DepartmentController : Controller
 }
 ```
 
-##### Views 全局启用TagHelper: Add > New Item > Razor View Imports, _ViewImports.cshtml
-
-```html
-@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
-```
-
-##### Views > Department Index页面 :  Add > New Item > Razor View, Index.cshtml
+- Views > Department > Index.cshtml Index页面 :  Add > New Item > Razor View
 
 ```html
 @using AspCoreDemo.Models
@@ -383,7 +383,7 @@ public class DepartmentController : Controller
 </div>
 ```
 
-##### Views > Department > DisplayTemplates 模板页面: Add > New Item > Razore View, Department.cshtml
+- Views > Department > DisplayTemplates > Department.cshtml 模板页面: Add > New Item > Razore View
 
 ```html
 @model AspCoreDemo.Models.Department
@@ -400,7 +400,7 @@ public class DepartmentController : Controller
 </tr>
 ```
 
-##### Views > Department Add页面 :  Add > New Item > Razor View, Add.cshtml
+- Views > Department > Add.cshtml Add页面 :  Add > New Item > Razor View
 
 ````html
 @using AspCoreDemo.Models
@@ -439,7 +439,7 @@ public class DepartmentController : Controller
     </form>
 ````
 
-### 3. Asp .Net Core 的配置信息源
+#### Asp .Net Core 的配置信息源
 
 * appsettings.json
 
@@ -493,7 +493,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-#### DepartmentController 注入options
+#### Controller 注入options
 
 ```c#
 private readonly IDepartmentService departmentService;
@@ -506,7 +506,7 @@ public DepartmentController(IDepartmentService departmentService, IOptions<AspCo
 }
 ```
 
-#### Department.cshtml注入options
+#### .cshtml注入options
 
 ```html
 @using AspCoreDemo.Models
@@ -533,9 +533,9 @@ public DepartmentController(IDepartmentService departmentService, IOptions<AspCo
     </tr>
 ```
 
-### 4. ViewComponet 可重用组件
+#### ViewComponet 可重用组件
 
-#### ViewComponents > CompanySummaryViewComponent.cs component类
+- ViewComponents > CompanySummaryViewComponent.cs component类
 
 ```c#
 public class CompanySummaryViewComponent : ViewComponent
@@ -556,7 +556,7 @@ public class CompanySummaryViewComponent : ViewComponent
 }
 ```
 
-####  Views\Shared\Components\CompanySummary\Default.cshtml component页面
+- Views\Shared\Components\CompanySummary\Default.cshtml component页面
 
 ```html
 @model AspCoreDemo.Models.CompanySummary
@@ -574,7 +574,14 @@ public class CompanySummaryViewComponent : ViewComponent
     </div>
 ```
 
-#### Views\Department\Index.cshtml 使用ViewComponent
+- Views\\_ViewImports.cshtml 引入本项目程序集
+
+  ```html
+  @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+  @addTagHelper "*, AspCoreDemo"
+  ```
+
+- Views\Department\Index.cshtml 使用ViewComponent
 
 ```html
 <div class="row">
@@ -589,10 +596,391 @@ public class CompanySummaryViewComponent : ViewComponent
 </div>
 ```
 
-#### Views\\_ViewImports.cshtml 引入本项目程序集
+### 2. Razor Page
 
-```html
-@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
-@addTagHelper "*, AspCoreDemo"
+#### MVC
+
+* Model: 数据
+* View: Html, Razor, TagHelpers
+* Controller: 逻辑
+
+#### Razor Page
+
+* 数据
+* Html, Razor, TagHelpers
+* 逻辑
+
+#### Create Project 
+
+- New > Project > Asp .Net core web application
+
+#### Startup.cs
+
+```c#
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddRazorPages();
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
+        app.UseStaticFiles();
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthentication();
+
+        app.UseRouting();
+
+        app.UseEndpoints(endpoints =>
+                         {
+                             endpoints.MapRazorPages();
+                         });
+    }
+}
 ```
 
+#### Create Models, Service and Register services
+
+- Startup.cs
+
+  ```c#
+  public void ConfigureServices(IServiceCollection services)
+  {
+      services.AddRazorPages();
+  
+      services.AddSingleton<IDepartmentService, DepartmentService>();
+      services.AddSingleton<IEmployeeService, EmpolyeeService>();
+  }
+  ```
+
+#### Config配置信息源
+
+- appsettings.json
+
+  ```json
+  {
+    "Logging": {
+      "LogLevel": {
+        "Default": "Information",
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information"
+      }
+    },
+    "AllowedHosts": "*",
+    "AspCoreRazorDemo": {
+      "BoldDepartmentEmployeeC: 30
+    }
+  }
+  ```
+
+#### Startup.cs 注入Config，映射为options类
+
+```c#
+private readonly IConfiguration configuration;
+
+public Startup(IConfiguration configuration)
+{
+	this.configuration = configuration;
+}
+
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddRazorPages();
+
+    services.AddSingleton<IDepartmentService, DepartmentService>();
+    services.AddSingleton<IEmployeeService, EmpolyeeService>();
+
+    services.Configure<AspCoreRazorDemoOptions>(configuration.GetSection("AspCoreRazorDemo"));
+}
+```
+
+#### Using libman Install bootstrap
+
+- Add > Client-Side Library > bootstrap@4.4.1 > Install, libman.json
+
+  ```json
+  {
+    "version": "1.0",
+    "defaultProvider": "unpkg",
+    "libraries": [
+      {
+        "library": "bootstrap@4.4.1",
+        "destination": "wwwroot/lib/bootstrap/",
+        "files": [
+          "dist/css/bootstrap.css"
+        ]
+      }
+    ]
+  }
+  ```
+
+#### Using BuildBundlerMinifier Merge and Minify css files
+
+- Add > New Item, bundleconfig.json 
+
+  ```json
+  [
+    {
+      "outputFileName": "wwwroot/css/all.min.css",
+      "inputFiles": [
+        "wwwroot/css/site.css",
+        "wwwroot/lib/bootstrap/dist/css/bootstrap.css"
+      ]
+    },
+    {
+      "outputFileName": "wwwroot/css/bootstrap.css",
+      "inputFiles": [
+        "wwwroot/lib/bootstrap/dist/css/bootstrap.css"
+      ],
+      "minify": {"enabled": true}
+    }
+  ]
+  ```
+
+- Manage NuGet packges > BuildBundlerMinifier
+
+#### ASPNETCORE_ENVIRONMENT
+
+- \Properties\launchSettings.json
+
+  ```json
+  {
+    "profiles": {
+      "AspCoreRazorDemo": {
+        "commandName": "Project",
+        "launchBrowser": true,
+        "applicationUrl": "https://localhost:5001;http://localhost:5000",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    }
+  }
+  ```
+
+#### Views
+
+- Views  >  _ViewImports.cshtml 全局启用TagHelper : Add > New Item > Razor View Imports
+
+  ```html
+  @using AspCoreRazorDemo
+  @namespace AspCoreRazorDemo.Pages
+  @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+  ```
+
+- Views > Shared > _Layout.cshtml 公共页面 : Add > New Item > Razor Layout
+
+  ```html
+  <!DOCTYPE html>
+  
+  <html>
+  <head>
+      <meta name="viewport" content="width=device-width" />
+      <title>@ViewBag.Title</title>
+  
+      <environment include="Development">
+          <link rel="stylesheet" asp-href-include="css/*" asp-href-exclude="css/all.main.css" />
+      </environment>
+      <environment exclude="Development">
+          <link rel="stylesheet" asp-href-include="css/all.main.css" />
+      </environment>
+  </head>
+  <body>
+      <div class="container">
+          <div class="row">
+              <div class="col-md-2">
+                  <!-- taghelper: asp-append-version 防止图片被缓存 -->
+                  <img asp-append-version="true"
+                       alt="logo"
+                       src="~/images/Home.png"
+                       style="height: 60px; width: 100px;" />
+              </div>
+              <div class="col-md-10">
+                  <span class="h2">@ViewBag.Title</span>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                  @RenderBody()
+              </div>
+          </div>
+      </div>
+  </body>
+  </html>
+  
+  ```
+
+- Views > _ViewStart.cshtml start 页面： Add > New Item > Razor View Start
+
+  ```html
+  @{
+      Layout = "_Layout";
+  }
+  ```
+
+- Pages > Index.cshtml : Add > NewItem > Razor View
+
+  ```html
+  @page
+  @using AspCoreRazorDemo.Models
+  @using AspCoreRazorDemo.Services
+  @inject IDepartmentService departmentService
+  
+  <div class="row">
+      <div class="col-md-10 offset-md-2">
+          <table class="table">
+              <tr>
+                  <th>Name</th>
+                  <th>Location</th>
+                  <th>EmployeeCount</th>
+                  <th>Opration</th>
+              </tr>
+              @Html.DisplayFor(x => x.Departments)
+          </table>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-md-4">
+          <a asp-page="Department/AddDepartment">Add</a>
+      </div>
+  </div>
+  
+  @functions
+  {
+      public IEnumerable<Department> Departments { get; set; }
+  
+      public async Task OnGetAsync()
+      {
+          Departments = await departmentService.GetAll();
+      }
+  
+  }
+  ```
+
+- Pages > DisplayTemplates > Department.cshtml: Add > NewItem > Razor View
+
+  ```html
+  @using AspCoreRazorDemo.Models
+  @using Microsoft.Extensions.Options
+  @model AspCoreRazorDemo.Models.Department
+  @inject IOptions<AspCoreRazorDemoOptions> options
+  
+      <tr>
+          @if (Model.EmployeeCount > options.Value.BoldDepartmentEmployeeCount)
+          {
+              <td><strong>@Model.Name</strong></td>
+          }
+          else
+          {
+              <td>@Model.Name</td>
+          }
+          <td>@Model.Location</td>
+          <td>@Model.EmployeeCount</td>
+      </tr>
+  ```
+
+- Pages > Department> AddDepartment.cshtml: Add > New Item > Razor Page
+
+  ```html
+  @page
+  @model AspCoreRazorDemo.Pages.Department.AddDepartmentModel
+  
+  <form method="post">
+      <div class="row form-group">
+          <div class="col-md-2 offset-md-2">
+              <label asp-for="Department.Name"></label>
+          </div>
+          <div class="col-md-6">
+              <input class="form-control" asp-for="Department.Name" />
+          </div>
+      </div>
+      <div class="row form-group">
+          <div class="col-md-2 offset-md-2">
+              <label asp-for="Department.Location"></label>
+          </div>
+          <div class="col-md-6">
+              <input class="form-control" asp-for="Department.Location" />
+          </div>
+      </div>
+      <div class="row form-group">
+          <div class="col-md-2 offset-md-2">
+              <label asp-for="Department.EmployeeCount"></label>
+          </div>
+          <div class="col-md-6">
+              <input class="form-control" asp-for="Department.EmployeeCount" />
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-2 offset-md-2">
+              <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+      </div>
+  </form>
+  ```
+
+- Pages > Department> AddDepartment.cshtml.cs
+
+  ```c#
+  public class AddDepartmentModel : PageModel
+  {
+      private readonly IDepartmentService departmentService;
+  
+      [BindProperty]
+      public AspCoreRazorDemo.Models.Department Department { get; set; }
+  
+      public AddDepartmentModel(IDepartmentService departmentService)
+      {
+      	this.departmentService = departmentService;
+      }
+  
+      public async Task<IActionResult> OnPostAsync()
+      {
+          if (ModelState.IsValid)
+          {
+              await departmentService.Add(Department);
+              return RedirectToPage("/Index");
+          }
+          return Page();
+      }
+  }
+  ```
+
+#### ViewComponet 可重用组件
+
+- Pages> Shared> Components> CompanySummary> Default.cshtml
+
+- ViewComponents > CompanySummaryViewComponent.cs
+
+- Views\\_ViewImports.cshtml 引入本项目程序集
+
+  ```html
+  @using AspCoreRazorDemo
+  @namespace AspCoreRazorDemo.Pages
+  @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+  @addTagHelper "*, AspCoreRazorDemo"
+  ```
+
+- Pages\Index.cshtml 使用ViewComponent
+
+  ```html
+  <div class="row">
+      <div class="col-md-2">
+          @await Component.InvokeAsync("CompanySummary", new { title = "Summary of Company" })
+          <vc:company-summary title="Summary"></vc:company-summary>
+      </div>
+  
+      <div class="col-md-4">
+          <a asp-page="Department/AddDepartment">Add</a>
+      </div>
+  </div>
+  ```
+
+  

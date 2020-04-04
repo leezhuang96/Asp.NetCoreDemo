@@ -1,0 +1,38 @@
+﻿@page
+@using AspCoreRazorDemo.Services
+@inject IDepartmentService departmentService
+
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>EmployeeCount</th>
+                <th>Opration</th>
+            </tr>
+            @Html.DisplayFor(x => x.Departments)
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        @await Component.InvokeAsync("CompanySummary", new { title = "Summary of Company" })
+        <vc:company-summary title="Summary"></vc:company-summary>
+    </div>
+
+    <div class="col-md-4">
+        <a asp-page="Department/AddDepartment">Add</a>
+    </div>
+</div>
+
+@functions
+{
+    public IEnumerable<AspCoreRazorDemo.Models.Department> Departments { get; set; }
+
+    public async Task OnGetAsync()
+    {
+        Departments = await departmentService.GetAll();
+    }
+
+}

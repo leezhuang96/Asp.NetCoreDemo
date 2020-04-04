@@ -1,0 +1,58 @@
+﻿@page "{departmentId:int}"
+@model EmployeeListModel
+
+@using Microsoft.AspNetCore.Mvc.RazorPages
+@using AspCoreRazorDemo.Services
+@using AspCoreRazorDemo.Models
+
+<div class="row">
+    <div class="col-md-10 offset-md-2">
+        <table class="table">
+            <tr>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Gender</th>
+                <th>IsFried</th>
+                <th>Operation</th>
+            </tr>
+            @Html.DisplayFor(x => x.Employees)
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        @await Component.InvokeAsync("CompanySummary", new { title = "Summary of Company" })
+        <vc:company-summary title="Summary"></vc:company-summary>
+    </div>
+
+    <div class="col-md-4">
+        <a asp-page="AddEmployee" asp-route-departmentId="@ViewData["DepartmentId"]">Add</a>
+    </div>
+</div>
+
+@functions{
+    public class EmployeeListModel : PageModel
+    {
+        private readonly IEmployeeService employeeService;
+
+        public EmployeeListModel(IEmployeeService employeeService)
+        {
+            this.employeeService = employeeService;
+        }
+
+        public IEnumerable<Employee> Employees { get; set; }
+
+        public async Task OnGetAsync(int departmentId)
+        {
+            Employees = await employeeService.GetByDepartmentId(departmentId);
+            ViewData["DepartmentId"] = departmentId;
+        }
+
+        public async Task<IActionResult> OnGetFireAsync(int employeeId, int departmentId)
+        {
+            await employeeService.Frie(employeeId);
+            return RedirectToPage("EmployeeList", new { departmentId });
+        }
+    }
+
+}

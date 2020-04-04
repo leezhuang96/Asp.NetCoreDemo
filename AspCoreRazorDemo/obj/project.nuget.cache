@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "YrvwhhzKR66qyFwTc9O+CzGsapmNahMHAFi10i+JavN6HOesC6yUUtIwQ9B/tzqipobF/KBrBBzq9g9FTwZrgA==",
+  "success": true,
+  "projectFilePath": "D:\\repos\\C#\\Asp.NetCoreDemo\\AspCoreRazorDemo\\AspCoreRazorDemo.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Jordon Li\\.nuget\\packages\\buildbundlerminifier\\3.2.435\\buildbundlerminifier.3.2.435.nupkg.sha512"
+  ],
+  "logs": []
+}
