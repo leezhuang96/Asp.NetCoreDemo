@@ -1,0 +1,20 @@
+﻿@inherits LayoutComponentBase
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <img asp-append-version="true"
+                 alt="logo"
+                 src="/images/Home.png"
+                 style="height: 60px; width: 100px;" />
+        </div>
+        <div class="col-md-10">
+            <span class="h2">Blazor App Demo</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @Body
+        </div>
+    </div>
+</div>

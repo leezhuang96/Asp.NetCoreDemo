@@ -1,0 +1,40 @@
+﻿@page "/"
+@inject IDepartmentService departmentService
+
+@if (departments == null)
+{
+    <p><em>loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-10 offset-md-2">
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>EmployeeCount</th>
+                    <th>Opration</th>
+                </tr>
+                @foreach (var item in departments)
+                { 
+                    <DepartmentItem department="@item"></DepartmentItem>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 offset-md-2">
+            <a href="/add-department">Add</a>
+        </div>
+    </div>
+}
+
+@code {
+    IEnumerable<BlazorAppDemo.Models.Department> departments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        departments = await departmentService.GetAll();
+    }
+}

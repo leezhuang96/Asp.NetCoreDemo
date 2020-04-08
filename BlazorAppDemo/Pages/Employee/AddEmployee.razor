@@ -1,0 +1,66 @@
+﻿@page "/add-employee/{DepartmentId}"
+@inject IEmployeeService employeeService
+@inject NavigationManager navigationManager
+
+    <EditForm Model="@employee" OnValidSubmit="HandelValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row form-group">
+            <div class="col-md-2 offset-md-2">
+                <label for="fristName">FristName</label>
+            </div>
+            <div class="col-md-6">
+                <InputText id="fristName" class="form-control"
+                           @bind-Value="@employee.FristName" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-2 offset-md-2">
+                <label for="lastName">LastName</label>
+            </div>
+            <div class="col-md-6">
+                <InputText id="lastName" class="form-control"
+                           @bind-Value="@employee.LastName" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-2 offset-md-2">
+                <label asp-for="gender">Gender</label>
+            </div>
+            <div class="col-md-6">
+                <select id="gender" class="form-control" onchange="OnSelectedGender">
+                    <option selected hidden disabled>Select Gender</option>
+                    @foreach (var item in Enum.GetValues(typeof(Gender)).Cast<Gender>())
+                    {
+                        <option value="@item">@item.ToString()</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 offset-md-2">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </EditForm>
+
+
+@code {
+    [Parameter]
+    public string DepartmentId { get; set; }
+    private Employee employee = new Employee();
+
+    public async Task HandelValidSubmit()
+    {
+        employee.DepartmentId = int.Parse(DepartmentId);
+        await employeeService.Add(employee);
+        navigationManager.NavigateTo($"/employee/{DepartmentId}");
+    }
+
+    public void OnSelectedGender(ChangeEventArgs args)
+    {
+        var gender = Enum.Parse(typeof(Gender), (string)args.Value);
+        employee.Gender = (Gender)gender;
+    }
+
+}

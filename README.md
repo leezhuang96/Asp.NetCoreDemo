@@ -1233,4 +1233,391 @@ public class CountController : Controller
   })
   ```
 
+
+### 4. Blazor
+
+ 基于Component的编程模型，Blazor宿主模型：
+
+- 客户端宿主模型：
+  - Mono解释器：
+    - 开源的.NET Freamework
+    - 可以解释IL（中间语言）
+    - 代码的IL是包含在.NET的Assembly里
+    - 浏览器可以执行mono,(webAssembly)
+    - mono将Assembly的代码解析为WebAssembly
+- 服务端宿主模型
+
+#### Create Project 
+
+- New > Project >  Asp .Net core web application
+
+#### Startup.cs
+
+```c#
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddRazorPages();
+        services.AddServerSideBlazor();
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
+        app.UseStaticFiles();
+        app.UseRouting();
+
+        app.UseEndpoints(endpoints =>
+                         {
+                             endpoints.MapBlazorHub();
+                             endpoints.MapFallbackToPage("/_Host");
+                         });
+    }
+}
+```
+
+#### Create Models, Service and Register services
+
+Startup.cs
+
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddRazorPages();
+    services.AddServerSideBlazor();
+
+    services.AddSingleton<IDepartmentService, DepartmentService>();
+    services.AddSingleton<IEmployeeService, EmpolyeeService>();
+}
+```
+
+#### Config配置信息源
+
+- appsettings.json
+
+  ```json
+  {
+    "Logging": {
+      "LogLevel": {
+        "Default": "Information",
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information"
+      }
+    },
+    "AllowedHosts": "*",
+    "BlazorAppDemo": {
+      "BoldDepartmentEmployeeC: 30
+    }
+  }
+  ```
+
+#### Startup.cs 注入Config，映射为options类
+
+```c#
+private readonly IConfiguration configuration;
+
+public Startup(IConfiguration configuration)
+{
+	this.configuration = configuration;
+}
+
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddRazorPages();
+
+    services.AddSingleton<IDepartmentService, DepartmentService>();
+    services.AddSingleton<IEmployeeService, EmpolyeeService>();
+
+    services.Configure<BlazorAppDemoOptions>(configuration.GetSection("BlazorAppDemo"));
+}
+```
+
+#### Using libman Install bootstrap
+
+Add > Client-Side Library > bootstrap@4.4.1 > Install, libman.json
+
+```json
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "bootstrap@4.4.1",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "dist/css/bootstrap.css"
+      ]
+    }
+  ]
+}
+```
+
+#### Using BuildBundlerMinifier Merge and Minify css files
+
+- Add > New Item, bundleconfig.json 
+
+  ```json
+  [
+    {
+      "outputFileName": "wwwroot/css/all.min.css",
+      "inputFiles": [
+        "wwwroot/css/site.css",
+        "wwwroot/lib/bootstrap/dist/css/bootstrap.css"
+      ]
+    },
+    {
+      "outputFileName": "wwwroot/css/bootstrap.css",
+      "inputFiles": [
+        "wwwroot/lib/bootstrap/dist/css/bootstrap.css"
+      ],
+      "minify": {"enabled": true}
+    }
+  ]
+  ```
+
+- Manage NuGet packges > BuildBundlerMinifier
+
+#### ASPNETCORE_ENVIRONMENT
+
+- \Properties\launchSettings.json
+
+  ```json
+  {
+    "profiles": {
+      "BlazorAppDemo": {
+        "commandName": "Project",
+        "launchBrowser": true,
+        "applicationUrl": "https://localhost:5001;http://localhost:5000",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    }
+  }
+  ```
+
+#### Views
+
+- Pages > _Host.cshtml: Add > NewItem > Razor View
+
+  ```html
+  @page "/"
+  @namespace BlazorAppDemo.Pages
+  @addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+  
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Blazore App Demo</title>
+      <base href="~/" />
+      <link rel="stylesheet" href="css/bootstrap.css" />
+      <link rel="stylesheet" href="css/site.css" />
+  </head>
+  <body>
+      <app>
+          <component type="typeof(App)" render-mode="ServerPrerendered" />
+      </app>
+  
+      <script src="_framework/blazor.server.js"></script>
+  </body>
+  </html>
+  ```
+
+- App.razor: Add > NewItem > Razor Component
+
+  ```html
+  <Router AppAssembly="@typeof(Program).Assembly">
+      <Found Context="routeData">
+          <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+      </Found>
+      <NotFound>
+          <LayoutView Layout="@typeof(MainLayout)">
+              <p>Sorry, there's nothing at this address.</p>
+          </LayoutView>
+      </NotFound>
+  </Router>
+  ```
+
+- _Imports.razor : Add > NewItem > Razor Component
+
+  ```c#
+  @using System.Net.Http
+  @using Microsoft.AspNetCore.Components.Forms
+  @using Microsoft.AspNetCore.Components.Routing
+  @using Microsoft.AspNetCore.Components.Web
+  @using Microsoft.JSInterop
+  @using BlazorAppDemo.Models
+  @using BlazorAppDemo.Services
+  ```
+
+- Shared > MainLayout.razor: Add > NewItem > Razor Component
+
+  ```html
+  @inherits LayoutComponentBase
+  
+  <div class="container">
+      <div class="row">
+          <div class="col-md-2">
+              <img asp-append-version="true"
+                   alt="logo"
+                   src="/images/Home.png"
+                   style="height: 60px; width: 100px;" />
+          </div>
+          <div class="col-md-10">
+              <span class="h2">Blazor App Demo</span>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              @Body
+          </div>
+      </div>
+  </div>
+  ```
+  - _Imports.razor 
+
+    ```
+    @using BlazorAppDemo.Shared
+    ```
+
+- Pages > Index.razor: Add > NewItem > Razor Component
+
+  ```html
+  @page "/"
+  @inject IDepartmentService departmentService
+  
+  @if (departments == null)
+  {
+      <p><em>loading...</em></p>
+  }
+  else
+  {
+      <div class="row">
+          <div class="col-md-10 offset-md-2">
+              <table class="table">
+                  <tr>
+                      <th>Name</th>
+                      <th>Location</th>
+                      <th>EmployeeCount</th>
+                      <th>Opration</th>
+                  </tr>
+                  @foreach (var item in departments)
+                  { 
+                      <DepartmentItem department="@item"></DepartmentItem>
+                  }
+              </table>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-4">
+              <a href="/add-department">Add</a>
+          </div>
+      </div>
+  }
+  
+  @code {
+      IEnumerable<Department> departments;
+  
+      protected override async Task OnInitializedAsync()
+      {
+          departments = await departmentService.GetAll();
+      }
+  }
+  ```
+
+- Componets > DepartmentItem.razor: Add > NewItem > Razor Component
+
+  ```html
+  @using Microsoft.Extensions.Options
+  @inject IOptions<BlazorAppDemoOptions> options
+  
+  <tr>
+      @if (Department.EmployeeCount > options.Value.BoldDepartmentEmployeeCount)
+      {
+          <td><strong>@Department.Name</strong></td>
+      }
+      else 
+      {
+          <td>@Department.Name</td>
+      }
+      <td>@Department.Location</td>
+      <td>@Department.EmployeeCount</td>
+  </tr>
+  
+  @code {
+      [Parameter]
+      public Department Department { get; set; }
+  }
+  ```
+
+  - _Imports.razor 
+
+    ```
+    @using BlazorAppDemo.Components
+    ```
+
+- Pages > Department > AddDepartment.razor: Add > NewItem > Razor Component
+
+  ```html
+  @page "/add-department"
+  @inject IDepartmentService departmentService
+@inject NavigationManager navigationManager
+  
+  <EditForm Model="@department" OnValidSubmit="@HandleValidSubmit">
+      <DataAnnotationsValidator />
+      <ValidationSummary />
+      <div class="row form-group">
+          <div class="col-md-2 offset-md-2">
+              <label for="name">Name</label>
+          </div>
+          <div class="col-md-6">
+              <InputText id="name" class="form-control"
+                         @bind-Value="@department.Name" />
+          </div>
+      </div>
+      <div class="row form-group">
+          <div class="col-md-2 offset-md-2">
+              <label for="location">Location</label>
+          </div>
+          <div class="col-md-6">
+              <InputText id="location" class="form-control"
+                         @bind-Value="@department.Location" />
+          </div>
+      </div>
+      <div class="row form-group">
+          <div class="col-md-2 offset-md-2">
+              <label for="employeeCount">EmployeeCount</label>
+          </div>
+          <div class="col-md-6">
+              <InputText id="employeeCount" class="form-control"
+                         @bind-Value="@employeeCount" />
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-2 offset-md-2">
+              <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+      </div>
+  </EditForm>
+  
+  @code {
+      private Department department = new Department();
+      private string employeeCount;
+  
+      private async Task HandleValidSubmit()
+      {
+          department.EmployeeCount = int.Parse(employeeCount);
+          await departmentService.Add(department);
+          navigationManager.NavigateTo("/");
+      }
+  }
+  ```
+  
   

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "OWCovdO+u9gN1FlwNQt9RA7x2nIGvDovz8aKBI6e27lsbZv6kf9dbeEiCa+PdYX1FaQDszZh0UN5YrC0GDv+vQ==",
+  "success": true,
+  "projectFilePath": "D:\\repos\\C#\\Asp.NetCoreDemo\\BlazorAppDemo\\BlazorAppDemo.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Jordon Li\\.nuget\\packages\\buildbundlerminifier\\3.2.447\\buildbundlerminifier.3.2.447.nupkg.sha512"
+  ],
+  "logs": []
+}

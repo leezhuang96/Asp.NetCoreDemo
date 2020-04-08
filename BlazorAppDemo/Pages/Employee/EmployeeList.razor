@@ -1,0 +1,33 @@
+﻿@page "/employee/{DepartmentId}"
+@inherits EmployeeListViewModel
+
+
+@if (Employees == null)
+{
+    <p><em>loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-10 offset-md-2">
+            <table class="table">
+                <tr>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>Gender</th>
+                    <th>IsFried</th>
+                    <th>Operation</th>
+                </tr>
+                @foreach (var item in Employees)
+                { 
+                    <EmployeeItem employee="@item"></EmployeeItem>
+                }
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 offset-md-2">
+            <a href="/add-employee/@DepartmentId">Add</a>
+        </div>
+    </div>
+}

@@ -1,0 +1,25 @@
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<BlazorAppDemoOptions> options
+
+<tr>
+    @if (Department.EmployeeCount > options.Value.BoldDepartmentEmployeeCount)
+    {
+        <td><strong>@Department.Name</strong></td>
+    }
+    else 
+    {
+        <td>@Department.Name</td>
+    }
+    <td>@Department.Location</td>
+    <td>@Department.EmployeeCount</td>
+    <td>
+        <a href="/employee/@Department.Id">
+            Employees
+        </a>
+    </td>
+</tr>
+
+@code {
+    [Parameter]
+    public Department Department { get; set; }
+}
