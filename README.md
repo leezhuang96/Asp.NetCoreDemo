@@ -1619,5 +1619,16 @@ Add > Client-Side Library > bootstrap@4.4.1 > Install, libman.json
       }
   }
   ```
-  
-  
+
+### 5. Web api
+
+- RESTful Api
+- Repository
+- Controller
+
+### 6. gRPC
+
+- gRPC: google Remote Procedure Call
+- protobuf: Protocol Buffers(.proto)
+  - gRPC服务定义
+  - 服务端与客户端之间传递的消息
